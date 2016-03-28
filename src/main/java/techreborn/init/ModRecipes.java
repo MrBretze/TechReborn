@@ -4,7 +4,6 @@ import java.security.InvalidParameterException;
 
 import net.minecraft.block.Block;
 import org.apache.commons.lang3.ArrayUtils;
-
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -13,6 +12,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
+import org.apache.commons.lang3.ArrayUtils;
 import reborncore.common.util.CraftingHelper;
 import reborncore.common.util.OreUtil;
 import techreborn.Core;
@@ -23,33 +23,10 @@ import techreborn.api.reactor.FusionReactorRecipeHelper;
 import techreborn.api.recipe.RecipeHandler;
 import techreborn.api.recipe.RecyclerRecipe;
 import techreborn.api.recipe.ScrapboxRecipe;
-import techreborn.api.recipe.machines.AlloySmelterRecipe;
-import techreborn.api.recipe.machines.BlastFurnaceRecipe;
-import techreborn.api.recipe.machines.CentrifugeRecipe;
-import techreborn.api.recipe.machines.ChemicalReactorRecipe;
-import techreborn.api.recipe.machines.CompressorRecipe;
-import techreborn.api.recipe.machines.ExtractorRecipe;
-import techreborn.api.recipe.machines.GrinderRecipe;
-import techreborn.api.recipe.machines.ImplosionCompressorRecipe;
-import techreborn.api.recipe.machines.IndustrialElectrolyzerRecipe;
-import techreborn.api.recipe.machines.IndustrialGrinderRecipe;
-import techreborn.api.recipe.machines.IndustrialSawmillRecipe;
-import techreborn.api.recipe.machines.PlateCuttingMachineRecipe;
-import techreborn.api.recipe.machines.VacuumFreezerRecipe;
-import techreborn.blocks.BlockMachineFrame;
-import techreborn.blocks.BlockOre;
-import techreborn.blocks.BlockOre2;
-import techreborn.blocks.BlockStorage;
-import techreborn.blocks.BlockStorage2;
+import techreborn.api.recipe.machines.*;
+import techreborn.blocks.*;
 import techreborn.config.ConfigTechReborn;
-import techreborn.items.ItemCells;
-import techreborn.items.ItemDusts;
-import techreborn.items.ItemDustsSmall;
-import techreborn.items.ItemGems;
-import techreborn.items.ItemIngots;
-import techreborn.items.ItemNuggets;
-import techreborn.items.ItemParts;
-import techreborn.items.ItemPlates;
+import techreborn.items.*;
 import techreborn.parts.ItemStandaloneCables;
 import techreborn.utils.RecipeUtils;
 import techreborn.utils.StackWIPHandler;
@@ -257,12 +234,29 @@ public class ModRecipes
 			CraftingHelper.addShapedOreRecipe(BlockStorage.getStorageBlockByName(name), "AAA", "AAA", "AAA", 'A',
 					"ingot" + name.substring(0, 1).toUpperCase() + name.substring(1));
 		}
+		
+		addGemToolRecipes(new ItemStack(ModItems.rubySword), new ItemStack(ModItems.rubyPickaxe), new ItemStack(ModItems.rubyAxe), new ItemStack(ModItems.rubyHoe),
+				new ItemStack(ModItems.rubySpade), new ItemStack(ModItems.rubyHelmet), new ItemStack(ModItems.rubyChestplate), new ItemStack(ModItems.rubyLeggings), new ItemStack(ModItems.rubyBoots), ItemGems.getGemByName("ruby"));
+		
+		addGemToolRecipes(new ItemStack(ModItems.sapphireSword), new ItemStack(ModItems.sapphirePickaxe), new ItemStack(ModItems.sapphireAxe), new ItemStack(ModItems.sapphireHoe),
+				new ItemStack(ModItems.sapphireSpade), new ItemStack(ModItems.sapphireHelmet), new ItemStack(ModItems.sapphireChestplate), new ItemStack(ModItems.sapphireLeggings), new ItemStack(ModItems.sapphireBoots), ItemGems.getGemByName("sapphire"));
+		
+		addGemToolRecipes(new ItemStack(ModItems.peridotSword), new ItemStack(ModItems.peridotPickaxe), new ItemStack(ModItems.peridotAxe), new ItemStack(ModItems.peridotHoe),
+				new ItemStack(ModItems.peridotSpade), new ItemStack(ModItems.peridotHelmet), new ItemStack(ModItems.peridotChestplate), new ItemStack(ModItems.peridotLeggings), new ItemStack(ModItems.peridotBoots), ItemGems.getGemByName("peridot"));
+		
+		CraftingHelper.addShapedOreRecipe(new ItemStack(ModItems.ironChainsaw), " SS", "SCS", "BS ",
+				'S', "ingotSteel", 'B', TechRebornAPI.recipeCompact.getItem("reBattery"), 'C',
+				TechRebornAPI.recipeCompact.getItem("electronicCircuit"));
+		
+		CraftingHelper.addShapedOreRecipe(new ItemStack(ModItems.diamondChainsaw), " SS", "SBS", "CS ",
+				'S', "ingotSteel", 'B', ModItems.ironChainsaw, 'C',
+				TechRebornAPI.recipeCompact.getItem("electronicCircuit"));
 
 		CraftingHelper.addShapelessOreRecipe(ItemParts.getPartByName("carbonmesh"), ItemDusts.getDustByName("coal"),
 				ItemDusts.getDustByName("coal"), ItemDusts.getDustByName("coal"), ItemDusts.getDustByName("coal"));
-		CraftingHelper
-				.addShapelessOreRecipe(ItemParts.getPartByName("carbonfiber"), ItemParts.getPartByName("carbonmesh"),
-						ItemParts.getPartByName("carbonmesh"));
+
+		CraftingHelper.addShapelessOreRecipe(ItemParts.getPartByName("carbonfiber"),
+				ItemParts.getPartByName("carbonmesh"), ItemParts.getPartByName("carbonmesh"));
 
 		CraftingHelper
 				.addShapedOreRecipe(ItemParts.getPartByName("computerMonitor"), "ADA", "DGD", "ADA", 'D', dyes, 'A',
@@ -2153,11 +2147,11 @@ public class ModRecipes
 
 		// Rubber Wood Yields
 		RecipeHandler.addRecipe(
-				new CentrifugeRecipe(new ItemStack(TechRebornAPI.recipeCompact.getItem("rubberWood").getItem(), 15),
+				new CentrifugeRecipe(new ItemStack(TechRebornAPI.recipeCompact.getItem("rubberWood").getItem(), 16),
 						new ItemStack(TechRebornAPI.recipeCompact.getItem("cell").getItem(), 5),
-						new ItemStack(TechRebornAPI.recipeCompact.getItem("resin").getItem(), 8),
+						new ItemStack(ModItems.parts, 8, 41),
 						new ItemStack(Blocks.sapling, 6), ItemCells.getCellByName("methane", 1),
-						ItemCells.getCellByName("carbon", 4), 5000, 5));
+						ItemCells.getCellByName("carbon", 4), 5000, 5, false));
 
 		// Soul Sand Byproducts
 		RecipeHandler.addRecipe(
@@ -2182,7 +2176,7 @@ public class ModRecipes
 				new CentrifugeRecipe(ItemDusts.getDustByName("ashes", 1), TechRebornAPI.recipeCompact.getItem("cell"),
 						ItemCells.getCellByName("carbon"), null, null, null, 80, 5));
 		RecipeHandler.addRecipe(new CentrifugeRecipe(new ItemStack(Items.redstone, 10),
-				new ItemStack(TechRebornAPI.recipeCompact.getItem("cell").getItem(), 4),
+				TechRebornAPI.recipeCompact.getItem("cell"),
 				ItemCells.getCellByName("silicon", 1), ItemDusts.getDustByName("pyrite", 3),
 				ItemDusts.getDustByName("ruby", 1), ItemCells.getCellByName("mercury", 3), 6800, 5));
 		RecipeHandler.addRecipe(new CentrifugeRecipe(ItemDusts.getDustByName("endstone", 16),
@@ -3179,5 +3173,66 @@ public class ModRecipes
 						new ItemStack(ModItems.lapotronicOrb), 'S', ItemParts.getPartByName("superConductor"), 'I',
 						"ingotIridium", 'P', new ItemStack(ModItems.lapotronpack));
 	}
-
+	
+	static void addGemToolRecipes(ItemStack gemsword, ItemStack gempick, ItemStack gemaxe, ItemStack gemHoe, ItemStack gemspade, ItemStack gemhelmet, ItemStack gemchestplate, ItemStack gemleggings, ItemStack gemboots, ItemStack gem)
+	{
+		CraftingHelper.addShapedOreRecipe(gemsword,
+				" G ",
+				" G ",
+				" S ",
+				'S', Items.stick, 
+				'G', gem);
+		
+		CraftingHelper.addShapedOreRecipe(gempick,
+				"GGG",
+				" S ",
+				" S ",
+				'S', Items.stick, 
+				'G', gem);
+		
+		CraftingHelper.addShapedOreRecipe(gemaxe,
+				" GG",
+				" SG",
+				" S ",
+				'S', Items.stick, 
+				'G', gem);
+		
+		CraftingHelper.addShapedOreRecipe(gemHoe,
+				" GG",
+				" S ",
+				" S ",
+				'S', Items.stick, 
+				'G', gem);
+		
+		CraftingHelper.addShapedOreRecipe(gemspade,
+				" G ",
+				" S ",
+				" S ",
+				'S', Items.stick, 
+				'G', gem);
+		
+		CraftingHelper.addShapedOreRecipe(gemhelmet,
+				"GGG",
+				"G G",
+				"   ",
+				'G', gem);
+		
+		CraftingHelper.addShapedOreRecipe(gemchestplate,
+				"G G",
+				"GGG",
+				"GGG",
+				'G', gem);
+		
+		CraftingHelper.addShapedOreRecipe(gemleggings,
+				"GGG",
+				"G G",
+				"G G",
+				'G', gem);
+		
+		CraftingHelper.addShapedOreRecipe(gemboots,
+				"   ",
+				"G G",
+				"G G",
+				'G', gem);
+	}
 }
